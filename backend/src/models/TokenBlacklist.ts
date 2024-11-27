@@ -7,7 +7,10 @@ interface IBlacklist {
 }
 
 const BlacklistSchema = new Schema<IBlacklist>({
-  _id: { type: Schema.Types.ObjectId },
+  _id: {
+    type: Schema.Types.ObjectId,
+    auto: true,
+  },
   token: { type: String, required: true, unique: true },
   expiresAt: { type: Date, required: true }, // Matches the token's expiration
 });

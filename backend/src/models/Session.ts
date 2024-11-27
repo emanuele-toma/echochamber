@@ -7,7 +7,10 @@ interface ISession {
 }
 
 const SessionSchema = new Schema<ISession>({
-  _id: { type: Schema.Types.ObjectId },
+  _id: {
+    type: Schema.Types.ObjectId,
+    auto: true,
+  },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   description: { type: String }, // e.g., "Chrome on Windows"
 });

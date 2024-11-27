@@ -6,7 +6,6 @@ import { zValidator } from '@hono/zod-validator';
 import bcrypt from 'bcrypt';
 import { Hono } from 'hono';
 import { setCookie } from 'hono/cookie';
-import mongoose from 'mongoose';
 import { UAParser } from 'ua-parser-js';
 import { z } from 'zod';
 
@@ -48,7 +47,6 @@ SignInRoute.post(
     const description = `${browser.name} ${browser.version} on ${os.name} ${os.version}`;
 
     const session = await Session.create({
-      _id: new mongoose.Types.ObjectId(),
       user: user._id,
       description,
     });
@@ -69,6 +67,10 @@ SignInRoute.post(
       maxAge: CONFIG.REFRESH_TOKEN_EXPIRATION / 1000,
     });
 
-    return c.json({ message: 'Logged in successfully' });
+    return c.json({
+      message: 'Logged in successfully',
+      accessToken,
+      refreshToken,
+    });
   },
 );

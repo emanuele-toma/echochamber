@@ -2,7 +2,6 @@ import { Chamber } from '@/models';
 import type { Variables } from '@/types';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { Types } from 'mongoose';
 import { z } from 'zod';
 
 export const ChamberRoutes = new Hono<{ Variables: Variables }>();
@@ -23,7 +22,7 @@ ChamberRoutes.post(
   async c => {
     const { name, description } = c.req.valid('json');
 
-    const chamber = await Chamber.findOne({
+    const chamber = await Chamber.exists({
       name: { $regex: new RegExp(`^${name}$`, 'i') },
     });
 
@@ -34,13 +33,15 @@ ChamberRoutes.post(
     const { userId } = c.get('user');
 
     const newChamber = await Chamber.create({
-      _id: new Types.ObjectId(),
       name,
       description,
       owner: userId,
     });
 
-    return c.json(newChamber);
+    return c.json({
+      message: 'Chamber created',
+      chamber: newChamber.clean(),
+    });
   },
 );
 
@@ -67,6 +68,6 @@ ChamberRoutes.get(
       return c.json({ error: 'Chamber not found' }, 404);
     }
 
-    return c.json(chamber);
+    return c.json(chamber.clean());
   },
 );

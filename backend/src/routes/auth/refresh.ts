@@ -4,7 +4,6 @@ import type { Variables } from '@/types';
 import { generateTokens, getExpirationDate, verifyToken } from '@/utils';
 import { Hono } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
-import mongoose from 'mongoose';
 
 export const RefreshRoute = new Hono<{ Variables: Variables }>();
 
@@ -26,9 +25,7 @@ RefreshRoute.post('/refresh', async c => {
     payload.sessionId,
   );
 
-  // Blacklist old refresh token
   await Blacklist.create({
-    _id: new mongoose.Types.ObjectId(),
     token: refreshToken,
     expiresAt: getExpirationDate(refreshToken),
   });
@@ -48,5 +45,9 @@ RefreshRoute.post('/refresh', async c => {
     maxAge: CONFIG.REFRESH_TOKEN_EXPIRATION / 1000,
   });
 
-  return c.json({ message: 'Tokens refreshed' });
+  return c.json({
+    message: 'Tokens refreshed',
+    accessToken,
+    refreshToken: newRefreshToken,
+  });
 });

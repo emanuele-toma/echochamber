@@ -7,9 +7,13 @@ export const generateTokens = (
   userId: mongoose.Types.ObjectId,
   sessionId: mongoose.Types.ObjectId,
 ) => {
-  const accessToken = jwt.sign({ userId }, CONFIG.ACCESS_TOKEN_SECRET, {
-    expiresIn: CONFIG.ACCESS_TOKEN_EXPIRATION,
-  });
+  const accessToken = jwt.sign(
+    { userId, sessionId },
+    CONFIG.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: CONFIG.ACCESS_TOKEN_EXPIRATION,
+    },
+  );
 
   const payload: JwtPayload = { userId, sessionId };
 

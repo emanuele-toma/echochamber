@@ -11,14 +11,25 @@ export const AuthMiddleware = async (
   next: () => Promise<void>,
 ) => {
   // Retrieve tokens from cookies
-  const accessToken = getCookie(c, 'access_token');
-  const refreshToken = getCookie(c, 'refresh_token');
+  const accessToken =
+    getCookie(c, 'access_token') ||
+    c.req.header('authorization')?.split('Bearer ')[1] ||
+    c.req.header('x-access-token');
+  const refreshToken =
+    getCookie(c, 'refresh_token') || c.req.header('x-refresh-token');
 
   if (accessToken) {
     // Verify the access token
     const accessPayload = verifyToken(accessToken, CONFIG.ACCESS_TOKEN_SECRET);
     if (accessPayload) {
-      // Valid access token; set user and proceed
+      const session = await Session.exists({
+        _id: accessPayload.sessionId,
+      });
+
+      if (!session) {
+        return c.json({ error: 'Session not found' }, 403);
+      }
+
       c.set('user', { userId: accessPayload.userId });
       return await next();
     }
@@ -26,7 +37,7 @@ export const AuthMiddleware = async (
 
   // If access token is invalid or expired, attempt to use the refresh token
   if (refreshToken) {
-    const blacklisted = await Blacklist.findOne({ token: refreshToken });
+    const blacklisted = await Blacklist.exists({ token: refreshToken });
     if (blacklisted) {
       return c.json({ error: 'Invalid refresh token' }, 403);
     }
@@ -40,7 +51,7 @@ export const AuthMiddleware = async (
     }
 
     // Check if the session exists
-    const session = await Session.findOne({
+    const session = await Session.exists({
       sessionId: refreshPayload.sessionId,
     });
     if (!session) {
