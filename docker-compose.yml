@@ -8,7 +8,7 @@ services:
       - ./backend:/app
     working_dir: /app
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     environment:
       MONGO_USER: ${MONGO_USER}
       MONGO_PASS: ${MONGO_PASS}
