@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun --watch src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bun": "latest",
+    "@types/jsonwebtoken": "^9.0.7",
+    "prettier-plugin-organize-imports": "^4.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.4.1",
+    "bcrypt": "^5.1.1",
+    "hono": "^4.6.12",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.3",
+    "ua-parser-js": "^2.0.0",
+    "uuid": "^11.0.3",
+    "zod": "^3.23.8"
+  }
+}
