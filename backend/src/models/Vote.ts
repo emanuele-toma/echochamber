@@ -1,10 +1,10 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema, Types, model } from 'mongoose';
 
-interface IVote extends Document {
-  _id: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId;
-  post: mongoose.Types.ObjectId | null;
-  comment: mongoose.Types.ObjectId | null;
+export interface IVote extends Document {
+  _id: Types.ObjectId;
+  user: Types.ObjectId;
+  post: Types.ObjectId | null;
+  comment: Types.ObjectId | null;
   value: number; // 1 for upvote, -1 for downvote
   clean(): IVote;
 }
@@ -27,4 +27,4 @@ voteSchema.methods.clean = function () {
   };
 };
 
-export const Vote = mongoose.model<IVote>('Vote', voteSchema);
+export const Vote = model<IVote>('Vote', voteSchema);

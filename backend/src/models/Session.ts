@@ -1,8 +1,8 @@
-import mongoose, { Schema, model } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 
-interface ISession {
-  _id: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId;
+export interface ISession extends Document {
+  _id: Types.ObjectId;
+  user: Types.ObjectId;
   description?: string;
 }
 

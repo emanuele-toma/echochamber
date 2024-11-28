@@ -1,10 +1,10 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema, Types, model } from 'mongoose';
 
-interface IComment extends Document {
-  _id: mongoose.Types.ObjectId;
+export interface IComment extends Document {
+  _id: Types.ObjectId;
   content: string;
-  post: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId;
+  post: Types.ObjectId;
+  user: Types.ObjectId;
   votes: number;
   createdAt: Date;
   clean(): IComment;
@@ -35,8 +35,8 @@ commentSchema.methods.clean = function () {
 
 // When saving a comment, we will also update the User's `comments` field.
 commentSchema.post('save', async function (this: IComment) {
-  const User = mongoose.model('User');
+  const User = model('User');
   await User.updateOne({ _id: this.user }, { $push: { comments: this._id } });
 });
 
-export const Comment = mongoose.model<IComment>('Comment', commentSchema);
+export const Comment = model<IComment>('Comment', commentSchema);

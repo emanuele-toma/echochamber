@@ -1,13 +1,13 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema, Types, model } from 'mongoose';
 
-interface IPost extends Document {
-  _id: mongoose.Types.ObjectId;
+export interface IPost extends Document {
+  _id: Types.ObjectId;
   title: string;
   content: string;
   media?: boolean;
-  chamber: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId;
-  comments: mongoose.Types.ObjectId[];
+  chamber: Types.ObjectId;
+  user: Types.ObjectId;
+  comments: Types.ObjectId[];
   upvotes: number;
   downvotes: number;
   createdAt: Date;
@@ -47,8 +47,8 @@ postSchema.methods.clean = function () {
 
 // When saving a post, we will also update the User's `posts` field.
 postSchema.post('save', async function (this: IPost) {
-  const User = mongoose.model('User');
+  const User = model('User');
   await User.updateOne({ _id: this.user }, { $push: { posts: this._id } });
 });
 
-export const Post = mongoose.model<IPost>('Post', postSchema);
+export const Post = model<IPost>('Post', postSchema);

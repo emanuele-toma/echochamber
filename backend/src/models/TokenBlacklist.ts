@@ -1,14 +1,13 @@
-import mongoose, { model, Schema } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 
-interface IBlacklist {
-  _id: mongoose.Types.ObjectId;
+export interface IBlacklist extends Document {
   token: string;
   expiresAt: Date;
 }
 
 const BlacklistSchema = new Schema<IBlacklist>({
   _id: {
-    type: Schema.Types.ObjectId,
+    type: Types.ObjectId,
     auto: true,
   },
   token: { type: String, required: true, unique: true },

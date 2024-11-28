@@ -1,11 +1,10 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema, Types, model } from 'mongoose';
 
-interface IChamber extends Document {
-  _id: mongoose.Types.ObjectId;
+export interface IChamber extends Document {
   name: string;
   description: string;
-  posts: mongoose.Types.ObjectId[];
-  owner: mongoose.Types.ObjectId;
+  posts: Types.ObjectId[];
+  owner: Types.ObjectId;
   clean(): IChamber;
 }
 
@@ -29,4 +28,4 @@ chamberSchema.methods.clean = function () {
   };
 };
 
-export const Chamber = mongoose.model<IChamber>('Chamber', chamberSchema);
+export const Chamber = model<IChamber>('Chamber', chamberSchema);

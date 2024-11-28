@@ -25,9 +25,12 @@ RefreshRoute.post('/refresh', async c => {
     payload.sessionId,
   );
 
+  const expiration = getExpirationDate(refreshToken);
+  if (!expiration) return c.json({ error: 'Invalid expiration date' }, 500);
+
   await Blacklist.create({
     token: refreshToken,
-    expiresAt: getExpirationDate(refreshToken),
+    expiresAt: expiration,
   });
 
   // Set new tokens

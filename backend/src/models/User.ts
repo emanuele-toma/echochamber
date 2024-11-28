@@ -1,13 +1,13 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Schema, Types, model } from 'mongoose';
 
-interface IUser extends Document {
-  _id: mongoose.Types.ObjectId;
+export interface IUser extends Document {
+  _id: Types.ObjectId;
   username: string;
   email: string;
-  posts: mongoose.Types.ObjectId[];
-  comments: mongoose.Types.ObjectId[];
+  posts: Types.ObjectId[];
+  comments: Types.ObjectId[];
   password: string;
-  chambers: mongoose.Types.ObjectId[];
+  chambers: Types.ObjectId[];
   clean(): Omit<IUser, 'password'>;
 }
 
@@ -35,4 +35,4 @@ userSchema.methods.clean = function () {
   };
 };
 
-export const User = mongoose.model<IUser>('User', userSchema);
+export const User = model<IUser>('User', userSchema);
