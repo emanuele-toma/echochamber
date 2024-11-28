@@ -4,7 +4,7 @@ export const CONFIG = {
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'access',
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'refresh',
   ACCESS_TOKEN_EXPIRATION:
-    parseInt(process.env.ACCESS_TOKEN_EXPIRATION || '15') * 60 * 1000,
+    parseInt(process.env.ACCESS_TOKEN_EXPIRATION || '15') * 60,
   REFRESH_TOKEN_EXPIRATION:
-    parseInt(process.env.REFRESH_TOKEN_EXPIRATION || '43200') * 60 * 1000,
+    parseInt(process.env.REFRESH_TOKEN_EXPIRATION || '43200') * 60,
 };

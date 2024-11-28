@@ -57,14 +57,14 @@ SignInRoute.post(
       httpOnly: true,
       sameSite: 'strict',
       secure: true,
-      maxAge: CONFIG.ACCESS_TOKEN_EXPIRATION / 1000,
+      maxAge: CONFIG.ACCESS_TOKEN_EXPIRATION,
     });
 
     setCookie(c, 'refresh_token', refreshToken, {
       httpOnly: true,
       sameSite: 'strict',
       secure: true,
-      maxAge: CONFIG.REFRESH_TOKEN_EXPIRATION / 1000,
+      maxAge: CONFIG.REFRESH_TOKEN_EXPIRATION,
     });
 
     return c.json({
