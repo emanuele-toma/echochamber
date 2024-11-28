@@ -1,4 +1,4 @@
-import { Comment, Post } from '@/models';
+import { Chamber, Comment, Post } from '@/models';
 import type { Variables } from '@/types';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
@@ -8,7 +8,7 @@ export const CommentRoutes = new Hono<{ Variables: Variables }>();
 
 // Create a comment under a post
 CommentRoutes.post(
-  '/posts/:postId/comments',
+  '/chambers/:chamber/posts/:postId/comments',
   zValidator(
     'json',
     z.object({
@@ -18,13 +18,22 @@ CommentRoutes.post(
   zValidator(
     'param',
     z.object({
+      chamber: z.string(),
       postId: z.string(),
     }),
   ),
   async c => {
     const { content } = c.req.valid('json');
-    const { postId } = c.req.valid('param');
+    const { chamber: chamberName, postId } = c.req.valid('param');
     const { userId } = c.get('user');
+
+    const chamber = await Chamber.findOne({
+      name: { $regex: new RegExp(`^${chamberName}$`, 'i') },
+    });
+
+    if (!chamber) {
+      return c.json({ error: 'Chamber not found' }, 404);
+    }
 
     const post = await Post.findById(postId);
 
@@ -44,10 +53,11 @@ CommentRoutes.post(
 
 // Get all comments under a post, sortable by creation date or by votes
 CommentRoutes.get(
-  '/posts/:postId/comments',
+  '/chambers/:chamber/posts/:postId/comments',
   zValidator(
     'param',
     z.object({
+      chamber: z.string(),
       postId: z.string(),
     }),
   ),
@@ -56,13 +66,21 @@ CommentRoutes.get(
     z.object({
       sort: z.enum(['asc', 'desc']).default('desc'),
       sortBy: z.enum(['createdAt', 'votes']).default('createdAt'),
-      limit: z.number().int().min(1).max(100).default(10),
-      skip: z.number().int().min(0).default(0),
+      limit: z.coerce.number().int().min(1).max(100).default(10),
+      skip: z.coerce.number().int().min(0).default(0),
     }),
   ),
   async c => {
-    const { postId } = c.req.valid('param');
+    const { chamber: chamberName, postId } = c.req.valid('param');
     const { sort, sortBy, limit, skip } = c.req.valid('query');
+
+    const chamber = await Chamber.findOne({
+      name: { $regex: new RegExp(`^${chamberName}$`, 'i') },
+    });
+
+    if (!chamber) {
+      return c.json({ error: 'Chamber not found' }, 404);
+    }
 
     const post = await Post.findById(postId);
 

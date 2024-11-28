@@ -5,7 +5,8 @@ export interface IComment extends Document {
   content: string;
   post: Types.ObjectId;
   user: Types.ObjectId;
-  votes: number;
+  upvotes: number;
+  downvotes: number;
   createdAt: Date;
   clean(): IComment;
 }
@@ -18,7 +19,8 @@ const commentSchema = new Schema<IComment>({
   content: { type: String, required: true },
   post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  votes: { type: Number, default: 0 },
+  upvotes: { type: Number, default: 0 },
+  downvotes: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -28,7 +30,8 @@ commentSchema.methods.clean = function () {
     content: this.content,
     post: this.post,
     user: this.user,
-    votes: this.votes,
+    upvotes: this.upvotes,
+    downvotes: this.downvotes,
     createdAt: this.createdAt,
   };
 };

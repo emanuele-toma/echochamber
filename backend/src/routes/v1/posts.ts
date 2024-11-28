@@ -64,8 +64,8 @@ PostRoutes.get(
     z.object({
       sort: z.enum(['asc', 'desc']).default('desc'),
       sortBy: z.enum(['createdAt', 'votes']).default('createdAt'),
-      limit: z.number().int().min(1).max(100).default(10),
-      skip: z.number().int().min(0).default(0),
+      limit: z.coerce.number().int().min(1).max(100).default(10),
+      skip: z.coerce.number().int().min(0).default(0),
     }),
   ),
   async c => {

@@ -7,7 +7,6 @@ export interface IPost extends Document {
   media?: boolean;
   chamber: Types.ObjectId;
   user: Types.ObjectId;
-  comments: Types.ObjectId[];
   upvotes: number;
   downvotes: number;
   createdAt: Date;
@@ -24,7 +23,6 @@ const postSchema = new Schema<IPost>({
   media: { type: Boolean, default: false },
   chamber: { type: Schema.Types.ObjectId, ref: 'Chamber', required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
@@ -38,7 +36,6 @@ postSchema.methods.clean = function () {
     media: this.media,
     chamber: this.chamber,
     user: this.user,
-    comments: this.comments,
     upvotes: this.upvotes,
     downvotes: this.downvotes,
     createdAt: this.createdAt,

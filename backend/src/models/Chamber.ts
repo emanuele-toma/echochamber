@@ -3,7 +3,6 @@ import { Document, Schema, Types, model } from 'mongoose';
 export interface IChamber extends Document {
   name: string;
   description: string;
-  posts: Types.ObjectId[];
   owner: Types.ObjectId;
   clean(): IChamber;
 }
@@ -15,7 +14,6 @@ const chamberSchema = new Schema<IChamber>({
   },
   name: { type: String, required: true, unique: true },
   description: { type: String, required: true },
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   owner: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
