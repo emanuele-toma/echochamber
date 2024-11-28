@@ -48,6 +48,50 @@ PostRoutes.post(
   },
 );
 
+PostRoutes.post(
+  '/chambers/:chamber/posts/media',
+  zValidator(
+    'form',
+    z.object({
+      title: z.string().min(1).max(64),
+      content: z.string().min(1).max(65536),
+      media: z.instanceof(File),
+    }),
+  ),
+  zValidator(
+    'param',
+    z.object({
+      chamber: z
+        .string()
+        .regex(/^[a-zA-Z]+$/)
+        .max(32),
+    }),
+  ),
+  async c => {
+    const { title, content, media } = c.req.valid('form');
+    const { chamber: chamberName } = c.req.valid('param');
+    const { userId } = c.get('user');
+
+    const chamber = await Chamber.findOne({
+      name: { $regex: new RegExp(`^${chamberName}$`, 'i') },
+    });
+
+    if (!chamber) {
+      return c.json({ error: 'Chamber not found' }, 404);
+    }
+
+    const post = await Post.create({
+      title,
+      content,
+      media: true,
+      chamber: chamber._id,
+      user: userId,
+    });
+
+    return c.json({ message: 'Post created', post: post.clean() });
+  },
+);
+
 PostRoutes.get(
   '/chambers/:chamber/posts',
   zValidator(
