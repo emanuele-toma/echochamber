@@ -12,7 +12,7 @@ PostRoutes.post(
     'json',
     z.object({
       title: z.string().min(1).max(64),
-      content: z.string().min(1).max(1024),
+      content: z.string().min(1).max(65536),
     }),
   ),
   zValidator(
