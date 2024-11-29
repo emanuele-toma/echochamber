@@ -2,7 +2,8 @@ import { CONFIG } from '@/config';
 import { AuthMiddleware } from '@/middlewares';
 import { AuthRoutes, V1Routes } from '@/routes';
 import type { Variables } from '@/types';
-import { S3Client } from '@aws-sdk/client-s3';
+import { S3 } from '@/utils';
+import { ListBucketsCommand } from '@aws-sdk/client-s3';
 import { Hono } from 'hono';
 import mongoose from 'mongoose';
 
@@ -18,8 +19,10 @@ const main = async () => {
   console.log('🟢 Connected to database');
 
   console.log('🟡 Connecting to S3...');
-  const s3 = new S3Client();
-  // TODO: Check for connection
+  const s3 = new S3();
+  const command = new ListBucketsCommand({});
+  await s3.send(command);
+
   console.log('🟢 Connected to S3');
 
   console.log('🟡 Starting server...');

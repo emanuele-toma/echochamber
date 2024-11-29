@@ -14,8 +14,9 @@ export const CONFIG = {
     parseInt(process.env.REFRESH_TOKEN_EXPIRATION || '43200') * 60,
 
   // S3
-  S3_ENDPOINT: process.env.S3_ENDPOINT || 'http://localhost:9000',
+  S3_ENDPOINT: process.env.S3_ENDPOINT || 'http://minio:9000',
   S3_BUCKET: process.env.S3_BUCKET || 'bucket',
   S3_ACCESS_KEY: process.env.S3_ACCESS_KEY || 'access_key',
   S3_SECRET_KEY: process.env.S3_SECRET_KEY || 'secret_key',
+  S3_REGION: process.env.S3_REGION || 'us-east-1',
 };
