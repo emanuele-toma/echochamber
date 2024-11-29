@@ -105,7 +105,6 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
-      - --api.insecure=true
       - --accesslog=true
       # Remove to enable HTTPS
       # - --entrypoints.web.http.redirections.entryPoint.to=websecure
@@ -118,7 +117,6 @@ services:
       # - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
     ports:
       - 80:80
-      - 8080:8080
       # Remove to enable HTTPS
       # - 443:443
     volumes:
