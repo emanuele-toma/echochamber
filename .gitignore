@@ -1,3 +1,4 @@
 *.env
 mongo/data/*
 minio/data/*
+traefik/letsencrypt/*
