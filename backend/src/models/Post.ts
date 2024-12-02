@@ -42,10 +42,4 @@ postSchema.methods.clean = function () {
   };
 };
 
-// When saving a post, we will also update the User's `posts` field.
-postSchema.post('save', async function (this: IPost) {
-  const User = model('User');
-  await User.updateOne({ _id: this.user }, { $push: { posts: this._id } });
-});
-
 export const Post = model<IPost>('Post', postSchema);

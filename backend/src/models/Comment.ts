@@ -8,6 +8,7 @@ export interface IComment extends Document {
   upvotes: number;
   downvotes: number;
   createdAt: Date;
+  replyTo: Types.ObjectId;
   clean(): IComment;
 }
 
@@ -22,6 +23,7 @@ const commentSchema = new Schema<IComment>({
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
+  replyTo: { type: Schema.Types.ObjectId, ref: 'Comment' },
 });
 
 commentSchema.methods.clean = function () {
@@ -33,13 +35,8 @@ commentSchema.methods.clean = function () {
     upvotes: this.upvotes,
     downvotes: this.downvotes,
     createdAt: this.createdAt,
+    replyTo: this.replyTo,
   };
 };
-
-// When saving a comment, we will also update the User's `comments` field.
-commentSchema.post('save', async function (this: IComment) {
-  const User = model('User');
-  await User.updateOne({ _id: this.user }, { $push: { comments: this._id } });
-});
 
 export const Comment = model<IComment>('Comment', commentSchema);
