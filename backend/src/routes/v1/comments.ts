@@ -20,11 +20,12 @@ CommentRoutes.post(
     z.object({
       chamber: z.string(),
       postId: z.string(),
+      replyTo: z.string().optional(),
     }),
   ),
   async c => {
     const { content } = c.req.valid('json');
-    const { chamber: chamberName, postId } = c.req.valid('param');
+    const { chamber: chamberName, postId, replyTo } = c.req.valid('param');
     const { userId } = c.get('user');
 
     const chamber = await Chamber.findOne({
@@ -41,10 +42,19 @@ CommentRoutes.post(
       return c.json({ error: 'Post not found' }, 404);
     }
 
+    if (replyTo) {
+      const comment = await Comment.findById(replyTo);
+
+      if (!comment) {
+        return c.json({ error: 'Comment not found' }, 404);
+      }
+    }
+
     const comment = await Comment.create({
       content,
       post: post._id,
       user: userId,
+      replyTo: replyTo,
     });
 
     return c.json({ message: 'Comment created', comment: comment.clean() });
