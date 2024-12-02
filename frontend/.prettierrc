@@ -1,0 +1,9 @@
+{
+  "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-organize-imports"],
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false
+}

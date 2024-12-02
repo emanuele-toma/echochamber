@@ -1,4 +1,25 @@
 services:
+  frontend:
+    user: 1000:1000
+    image: oven/bun:latest
+    container_name: frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    expose:
+      - ${FRONTEND_PORT}
+    environment:
+      # Server
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      BACKEND_HOST: ${BACKEND_HOST}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`${FRONTEND_HOST}`)
+      - traefik.http.services.frontend.loadbalancer.server.port=${FRONTEND_PORT}
+    command: sh -c "bun i && bun dev"
+
   backend:
     user: 1000:1000
     image: oven/bun:latest
