@@ -1,7 +1,11 @@
+import { CONFIG } from '@/config';
 import { Chamber, Post } from '@/models';
 import type { Variables } from '@/types';
+import { S3 } from '@/utils';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import sharp from 'sharp';
 import { z } from 'zod';
 
 export const PostRoutes = new Hono<{ Variables: Variables }>();
@@ -48,14 +52,28 @@ PostRoutes.post(
   },
 );
 
+const allowedMediaTypes = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+];
+
 PostRoutes.post(
   '/chambers/:chamber/posts/media',
   zValidator(
     'form',
     z.object({
       title: z.string().min(1).max(64),
-      content: z.string().min(1).max(65536),
-      media: z.instanceof(File),
+      content: z
+        .instanceof(File)
+        .and(
+          z.custom(
+            (file: File) =>
+              allowedMediaTypes.includes(file.type) &&
+              file.size < 20 * 1024 * 1024,
+          ),
+        ),
     }),
   ),
   zValidator(
@@ -68,7 +86,7 @@ PostRoutes.post(
     }),
   ),
   async c => {
-    const { title, content, media } = c.req.valid('form');
+    const { title, content } = c.req.valid('form');
     const { chamber: chamberName } = c.req.valid('param');
     const { userId } = c.get('user');
 
@@ -82,11 +100,25 @@ PostRoutes.post(
 
     const post = await Post.create({
       title,
-      content,
       media: true,
       chamber: chamber._id,
       user: userId,
     });
+
+    const webp = await sharp(await content.arrayBuffer(), {
+      animated: content.type === 'image/webp' || content.type === 'image/gif',
+    })
+      .webp()
+      .toBuffer();
+
+    const s3 = new S3();
+    const command = new PutObjectCommand({
+      Bucket: CONFIG.S3_BUCKET,
+      Key: `chambers/${chamberName}/posts/${post._id}.webp`,
+      Body: webp,
+    });
+
+    await s3.send(command);
 
     return c.json({ message: 'Post created', post: post.clean() });
   },
@@ -135,8 +167,6 @@ PostRoutes.get(
       { $skip: skip },
       { $limit: limit },
     ]);
-
-    console.log(posts);
 
     posts.forEach(post => delete post.__v);
 

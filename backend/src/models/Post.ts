@@ -19,7 +19,7 @@ const postSchema = new Schema<IPost>({
     auto: true,
   },
   title: { type: String, required: true },
-  content: { type: String, required: true },
+  content: { type: String, required: false },
   media: { type: Boolean, default: false },
   chamber: { type: Schema.Types.ObjectId, ref: 'Chamber', required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },

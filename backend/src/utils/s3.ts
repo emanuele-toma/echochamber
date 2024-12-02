@@ -13,6 +13,7 @@ export class S3 extends S3Client {
           secretAccessKey: CONFIG.S3_SECRET_KEY,
         },
         endpoint: CONFIG.S3_ENDPOINT,
+        forcePathStyle: true,
       });
       S3.instance = this;
     }
