@@ -117,7 +117,7 @@ PostRoutes.post(
     const s3 = new S3();
     const command = new PutObjectCommand({
       Bucket: CONFIG.S3_BUCKET,
-      Key: `chambers/${chamberName}/posts/${post._id}.webp`,
+      Key: `chambers/${chamber.name}/posts/${post._id}.webp`,
       Body: webp,
     });
 
