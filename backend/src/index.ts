@@ -1,5 +1,4 @@
 import { CONFIG } from '@/config';
-import { AuthMiddleware } from '@/middlewares';
 import { AuthRoutes, V1Routes } from '@/routes';
 import type { Variables } from '@/types';
 import { S3 } from '@/utils';
@@ -45,7 +44,6 @@ const main = async () => {
   );
 
   app.route('/auth', AuthRoutes);
-  app.use('/api/*', AuthMiddleware);
   app.route('/api/v1', V1Routes);
 
   Bun.serve({

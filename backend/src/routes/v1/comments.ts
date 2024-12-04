@@ -1,3 +1,4 @@
+import { AuthMiddleware } from '@/middlewares';
 import { Chamber, Comment, Post } from '@/models';
 import type { Variables } from '@/types';
 import { zValidator } from '@hono/zod-validator';
@@ -9,6 +10,7 @@ export const CommentRoutes = new Hono<{ Variables: Variables }>();
 // Create a comment under a post
 CommentRoutes.post(
   '/chambers/:chamber/posts/:postId/comments',
+  AuthMiddleware,
   zValidator(
     'json',
     z.object({

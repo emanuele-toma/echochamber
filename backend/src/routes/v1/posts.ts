@@ -1,4 +1,5 @@
 import { CONFIG } from '@/config';
+import { AuthMiddleware } from '@/middlewares';
 import { Chamber, Post } from '@/models';
 import type { Variables } from '@/types';
 import { S3 } from '@/utils';
@@ -12,6 +13,7 @@ export const PostRoutes = new Hono<{ Variables: Variables }>();
 
 PostRoutes.post(
   '/chambers/:chamber/posts',
+  AuthMiddleware,
   zValidator(
     'json',
     z.object({
@@ -61,6 +63,7 @@ const allowedMediaTypes = [
 
 PostRoutes.post(
   '/chambers/:chamber/posts/media',
+  AuthMiddleware,
   zValidator(
     'form',
     z.object({

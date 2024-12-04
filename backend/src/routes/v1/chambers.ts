@@ -1,3 +1,4 @@
+import { AuthMiddleware } from '@/middlewares';
 import { Chamber } from '@/models';
 import type { Variables } from '@/types';
 import { zValidator } from '@hono/zod-validator';
@@ -9,6 +10,7 @@ export const ChamberRoutes = new Hono<{ Variables: Variables }>();
 // Create a chamber
 ChamberRoutes.post(
   '/chambers',
+  AuthMiddleware,
   zValidator(
     'json',
     z.object({
