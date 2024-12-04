@@ -4,11 +4,16 @@ import type { Variables } from '@/types';
 import { S3 } from '@/utils';
 import { ListBucketsCommand } from '@aws-sdk/client-s3';
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import mongoose from 'mongoose';
 
 const main = async () => {
   console.log('🔧 Config');
-  console.table(CONFIG);
+  const config = Object.entries(CONFIG).map(([key, value]) => ({
+    key,
+    value: typeof value === 'string' ? value : JSON.stringify(value),
+  }));
+  console.table(config);
 
   console.log('🟡 Connecting to database...');
   await mongoose.connect(CONFIG.MONGO_URI).catch(err => {
@@ -41,6 +46,13 @@ const main = async () => {
      ░  ░░ ░       ░  ░  ░    ░ ░  ░ ░       ░  ░  ░      ░  ░       ░    ░         ░  ░   ░     
          ░                         ░                                           ░                 
   `),
+  );
+
+  app.use(
+    '*',
+    cors({
+      origin: CONFIG.CORS_ORIGIN,
+    }),
   );
 
   app.route('/auth', AuthRoutes);

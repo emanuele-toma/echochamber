@@ -13,7 +13,8 @@ services:
       # Server
       FRONTEND_PORT: ${FRONTEND_PORT}
       FRONTEND_HOST: ${FRONTEND_HOST}
-      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_URL: http://backend/api/v1
+      NEXT_PUBLIC_BACKEND_URL: http://${BACKEND_HOST}/api/v1
     labels:
       - traefik.enable=true
       - traefik.http.routers.frontend.rule=Host(`${FRONTEND_HOST}`)
@@ -40,6 +41,7 @@ services:
 
       # Server
       BACKEND_PORT: ${BACKEND_PORT}
+      CORS_ORIGIN: ${CORS_ORIGIN}
 
       # JWT
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}

@@ -1,6 +1,7 @@
 export const CONFIG = {
   // SERVER
   PORT: process.env.PORT || 80,
+  CORS_ORIGIN: process.env.CORS_ORIGIN?.split(',') || ['http://fbi.com'],
 
   // MONGO
   MONGO_URI: `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
