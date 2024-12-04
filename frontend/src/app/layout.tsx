@@ -9,7 +9,8 @@ import '@mantine/nprogress/styles.css';
 import '@mantine/spotlight/styles.css';
 import '@mantine/tiptap/styles.css';
 
-import { Navbar } from '@/components/Navbar/Navbar';
+import { Navbar } from '@/components/Navbar';
+import { ReactQueryProvider } from '@/components/ReactQueryProvider';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
 export const metadata = {
@@ -17,20 +18,22 @@ export const metadata = {
   description: 'Truly one of the all-time alternatives of reddit',
 };
 
-export default function RootLayout({
-  children,
-}: {
+interface PageProps {
   children: React.ReactNode;
-}) {
+}
+
+export default function RootLayout({ children }: PageProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>
-          <Navbar>{children}</Navbar>
-        </MantineProvider>
+        <ReactQueryProvider>
+          <MantineProvider>
+            <Navbar>{children}</Navbar>
+          </MantineProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
