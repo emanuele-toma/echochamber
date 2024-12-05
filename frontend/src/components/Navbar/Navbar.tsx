@@ -13,6 +13,7 @@ import {
   Text,
 } from '@mantine/core';
 import { IconLogin2 } from '@tabler/icons-react';
+import { ColorSchemeToggle } from '../ColorSchemeToggle';
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -29,18 +30,21 @@ export function Navbar({ children }: NavbarProps) {
               EchoChamber
             </Text>
           </Group>
-          <Menu>
-            <MenuTarget>
-              <Button p={0} radius={'xl'} variant="transparent">
-                <Avatar size={32} />
-              </Button>
-            </MenuTarget>
-            <MenuDropdown>
-              <MenuItem leftSection={<IconLogin2 size={18} />}>
-                Sign in
-              </MenuItem>
-            </MenuDropdown>
-          </Menu>
+          <Group>
+            <ColorSchemeToggle />
+            <Menu>
+              <MenuTarget>
+                <Button p={0} radius={'xl'} variant="transparent">
+                  <Avatar size={32} />
+                </Button>
+              </MenuTarget>
+              <MenuDropdown>
+                <MenuItem leftSection={<IconLogin2 size={18} />}>
+                  Sign in
+                </MenuItem>
+              </MenuDropdown>
+            </Menu>
+          </Group>
         </Group>
       </AppShellHeader>
       <AppShellMain>{children}</AppShellMain>
