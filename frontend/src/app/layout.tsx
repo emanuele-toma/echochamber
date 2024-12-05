@@ -26,11 +26,11 @@ export default function RootLayout({ children }: PageProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body>
         <ReactQueryProvider>
-          <MantineProvider>
+          <MantineProvider defaultColorScheme="auto">
             <Navbar>{children}</Navbar>
           </MantineProvider>
         </ReactQueryProvider>

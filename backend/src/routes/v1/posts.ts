@@ -169,6 +169,30 @@ PostRoutes.get(
       { $sort: { [sortBy]: sort === 'asc' ? 1 : -1 } },
       { $skip: skip },
       { $limit: limit },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: '_user',
+        },
+      },
+      {
+        $unwind: '$_user',
+      },
+      {
+        $addFields: {
+          user: {
+            _id: '$_user._id',
+            username: '$_user.username',
+          },
+        },
+      },
+      {
+        $project: {
+          _user: 0,
+        },
+      },
     ]);
 
     posts.forEach(post => delete post.__v);

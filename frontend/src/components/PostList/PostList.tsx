@@ -1,27 +1,33 @@
 'use client';
 
-import { CONFIG } from '@/config';
 import { api } from '@/utils';
-import { Box, Paper, Stack, Text, Title } from '@mantine/core';
+import { Stack } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import Image from 'next/image';
+import { Fragment } from 'react';
+import { MediaPost } from '../MediaPost';
+import { TextPost } from '../TextPost';
 
-dayjs.extend(relativeTime);
-
-interface GetChamberPostsData {
+type GetChamberPostsData = {
   _id: string;
   title: string;
-  content?: string;
-  media: boolean;
   chamber: string;
-  user: string;
+  user: {
+    username: string;
+    _id: string;
+  };
   upvotes: number;
   downvotes: number;
   votes: number;
   createdAt: string;
-}
+} & (
+  | {
+      media: true;
+    }
+  | {
+      media: false;
+      content: string;
+    }
+);
 
 const getChamberPosts = async (chamberName: string) => {
   const response = await api.get<GetChamberPostsData[]>(
@@ -43,27 +49,24 @@ export function PostList({ chamberName }: PostListProps) {
   return (
     <Stack>
       {posts?.map(post => (
-        <Paper key={post._id} withBorder p={'lg'}>
-          <Stack gap={'xs'}>
-            <Text c={'dimmed'} fz={'xs'}>
-              {post.user} - {dayjs(post.createdAt).fromNow()}
-            </Text>
-            <Title order={4}>{post.title}</Title>
-            {!post.media && <Text>{post.content}</Text>}
-            {post.media && (
-              <Box w={'100%'} h={500} pos={'relative'}>
-                <Image
-                  alt={post.title}
-                  src={`${CONFIG.PUBLIC_CDN_URL}/chambers/${chamberName}/posts/${post._id}.webp`}
-                  fill
-                  style={{
-                    objectFit: 'cover',
-                  }}
-                />
-              </Box>
-            )}
-          </Stack>
-        </Paper>
+        <Fragment key={post._id}>
+          {post.media ? (
+            <MediaPost
+              chamberName={chamberName}
+              postId={post._id}
+              username={post.user.username}
+              createdAt={post.createdAt}
+              title={post.title}
+            />
+          ) : (
+            <TextPost
+              username={post.user.username}
+              createdAt={post.createdAt}
+              title={post.title}
+              content={post.content!}
+            />
+          )}
+        </Fragment>
       ))}
     </Stack>
   );

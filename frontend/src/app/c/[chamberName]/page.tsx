@@ -19,7 +19,7 @@ export default async function Chamber({ params }: PageProps) {
   );
 
   return (
-    <Container>
+    <Container size={'sm'}>
       <h1>{chamber.name}</h1>
       <PostList chamberName={chamber.name} />
     </Container>
