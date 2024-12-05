@@ -1,7 +1,7 @@
 import { CONFIG } from '@/config';
 import type { NextConfig } from 'next';
 
-const url = new URL(CONFIG.PUBLIC_CDN_URL);
+const url = new URL(CONFIG.PUBLIC_S3_URL);
 
 const nextConfig: NextConfig = {
   images: {

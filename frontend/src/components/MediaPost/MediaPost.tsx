@@ -26,7 +26,7 @@ export function MediaPost({
           <Box h={'100%'}>
             <Image
               alt={title}
-              src={`${CONFIG.PUBLIC_CDN_URL}/chambers/${chamberName}/posts/${postId}.webp`}
+              src={`${CONFIG.PUBLIC_S3_URL}/chambers/${chamberName}/posts/${postId}.webp`}
               width={720}
               height={720}
               style={{
